@@ -21,7 +21,7 @@ yarn install
 node app.js
 ```
 
-## Project setup
+## Start client
 In root direcotry
 ```
 yarn install
