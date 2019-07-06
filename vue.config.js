@@ -88,6 +88,36 @@ module.exports = {
           secure: false,
           ws: false,
         },
+        '/addressList':{ 
+          target: 'http://localhost:9090',
+          secure: false,
+          ws: false,
+        },
+        '/setDefaultAddress':{ 
+          target: 'http://localhost:9090',
+          secure: false,
+          ws: false,
+        },
+        '/delAddress':{ 
+          target: 'http://localhost:9090',
+          secure: false,
+          ws: false,
+        },
+        '/payment':{ 
+          target: 'http://localhost:9090',
+          secure: false,
+          ws: false,
+        },
+        '/orderDetail':{ 
+          target: 'http://localhost:9090',
+          secure: false,
+          ws: false,
+        },
+        '/showOrderList':{ 
+          target: 'http://localhost:9090',
+          secure: false,
+          ws: false,
+        },
       }
     }
   }

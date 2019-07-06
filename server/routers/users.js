@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var User = require('./../models/users')
+require('./../util/util')
 
 router.post("/users/login",function(req,res,next){
   var param={
@@ -63,7 +64,6 @@ router.get("/checkLogin",function(req,res,next){
 })
 
 router.get("/cartList",function(req,res,next){
-  console.log("Thi is cartlist")
   var userId=req.cookies.userId
   User.findOne({userId:userId}).then((data)=>{
     if(!data)  res.json({status:'1',msg:'', result:'' })
@@ -129,4 +129,161 @@ router.post("/editCheckAll",function(req,res,next){
 
   })
 })
+
+router.get("/addressList",function(req,res,next){
+  var userId=req.cookies.userId
+  User.findOne({userId:userId}).then(data=>{
+    if(!data) res.json({status:'1',msg:'error', result:''})
+    res.json({
+      status:'0',
+      msg:'',
+      result:data.addressList
+      })
+  })
+})
+
+router.post("/setDefaultAddress",function(req,res,next){
+
+  
+  var userId=req.cookies.userId
+  var addressId=req.body.addressId
+
+  if(!addressId) return res.json({status:'1000',msg:'AddressId error', result:''})
+
+  User.findOne({userId:userId}).then(data=>{
+    if(!data) res.json({status:'1',msg:'error', result:''})
+
+    var addressList=data.addressList
+    addressList.forEach(item=>{
+      if(item.addressId==addressId){
+        item.isDefault=true
+      }else{
+        item.isDefault=false
+      }
+    })
+
+    data.save().then(data1=>{
+        if(!data1) res.json({status:'1',msg:'error', result:''})
+        res.json({
+          status:'0',
+          msg:'',
+          result:''
+          })
+    })
+  })
+})
+
+router.post("/delAddress",function(req,res,next){
+  var userId=req.cookies.userId
+  var addressId=req.body.addressId
+
+  User.update({userId:userId},{$pull:{'addressList':{'addressId':addressId}}}).then(data=>{
+    if(!data) res.json({status:'1',msg:'error', result:''})
+    res.json({
+      status:'0',
+      msg:'',
+      result:''
+      })
+
+  })
+})
+
+router.post("/payment",function(req,res,next){
+  var userId=req.cookies.userId
+  var orderTotal=req.body.orderTotal
+  var addressId=req.body.addressId
+  User.findOne({userId:userId},function(err,data){
+    if(err) res.json({status:'1',msg:'error', result:''})
+    if(!data) res.json({status:'1',msg:'error', result:''})
+
+    var address=''
+    var goodsList=[]
+    data.addressList.forEach(item=>{
+      if(addressId==item.addressId){
+        address=item
+      }
+    })
+
+    data.cartList.filter(item=>{
+      if(item.checked=="true"){
+        goodsList.push(item)
+      }
+    })
+
+    var platform="622"
+    var r1=Math.floor(Math.random()*10)
+    var r2=Math.floor(Math.random()*10)
+    var sysDate=new Date().Format('yyyyMMddhhmmss')
+    var createDate=new Date().Format('yyyy-MM- dd:hh:mm:ss')
+    var orderId=platform+r1+sysDate+r2
+
+    var order={
+                orderId:orderId,
+                orderTotal:orderTotal,
+                addressInfo:address,
+                goodsList:goodsList,
+                orderStatus:'1',
+                createDate:createDate
+              }
+
+    data.orderList.push(order)
+    data.save().then(data1=>{
+      if(!data1) res.json({status:'1',msg:'error', result:''})
+
+      res.json({
+          status:'0',
+          msg:'',
+          result:{
+            orderId:order.orderId,
+            orderTotal:order.orderTotal
+            }
+        })
+      
+    })
+
+  })
+})
+
+router.get("/orderDetail",function(req,res,next){
+  var userId=req.cookies.userId
+  var orderId=req.query.orderId
+  var orderTotal=0
+  User.findOne({userId:userId}).then((data)=>{
+    if(!data) res.json({status:'1',msg:'error', result:''})
+    var orderList=data.orderList
+    
+    if(orderList.length>0){
+      orderList.forEach(item=>{
+        if(item.orderId==orderId){
+          orderTotal=item.orderTotal
+        }
+      })
+      if(orderTotal==0) res.json({status:'1',msg:'error1', result:''})
+    }
+
+    data.cartList=data.cartList.filter(item=>{
+      return item.checked!=='true'
+    })
+    data.save().then(data2=>{
+      if(!data2) res.json({status:'1',msg:'error', result:''})
+      res.json({
+        status:'0',
+        msg:'',
+        result:{
+            orderTotal:orderTotal
+            }
+        })
+
+    })
+
+  })
+})
+
+router.get("/showOrderList",function(req,res,next){
+  var userId=req.cookies.userId
+  User.findOne({userId:userId}).then((data)=>{
+    res.send(data.orderList)
+  })
+})
+
 module.exports=router

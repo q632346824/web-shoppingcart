@@ -95,10 +95,8 @@ router.post('/addCart',function(req,res,next){
     }else{
       Goods.findOne({productId:productId}).then(data2=>{
         if(!data2) res.json({ status:"1", msg:err.message })
-        console.log(data2)
         data2.productNum=1
         data2.checked=1
-        console.log(data2)
         data1.cartList.push(data2)
         data1.save().then(data3=>{
           if(!data3)  res.json({ status:"1", msg:err.message })

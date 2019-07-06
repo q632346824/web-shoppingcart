@@ -52,7 +52,7 @@
     </div>
     <modal v-bind:mdShow="mdShow" v-on:close="closeModal">
         <p slot="message">
-            请先登录,否则无法加入到购物车中!
+            Please Login First
         </p>
         <div slot="btnGroup">
             <a class="btn btn--m" href="javascript:;" @click="mdShow = false">关闭</a>
@@ -60,11 +60,11 @@
     </modal>
     <modal v-bind:mdShow="mdShowCart" v-on:close="closeModal">
     <p slot="message">
-        <span>加入购物车成!</span>
+        <span>add to cart successfully</span>
     </p>
     <div slot="btnGroup">
-        <a class="btn btn--m" href="javascript:;" @click="mdShowCart = false">继续购物</a>
-        <router-link class="btn btn--m btn--red" href="javascript:;" to="/cart">查看购物车</router-link>
+        <a class="btn btn--m" href="javascript:;" @click="mdShowCart = false">continue shopping</a>
+        <router-link class="btn btn--m btn--red" href="javascript:;" to="/cart">Go to Cart</router-link>
     </div>
     </modal>
 
@@ -186,7 +186,3 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
