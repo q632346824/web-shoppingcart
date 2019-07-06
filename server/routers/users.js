@@ -279,6 +279,10 @@ router.get("/orderDetail",function(req,res,next){
   })
 })
 
+router.get("/",function(req,res,next){
+
+    res.send("123")
+})
 router.get("/showOrderList",function(req,res,next){
   var userId=req.cookies.userId
   User.findOne({userId:userId}).then((data)=>{

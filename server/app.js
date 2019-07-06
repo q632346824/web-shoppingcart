@@ -18,10 +18,8 @@ app.use(cookieParser())
 
 app.use(function(req,res,next){
 	if(req.cookies.userId){
-		console.log("This is cookies")
 		next()
 	}else{
-		console.log("The is prelogin")
 		if(req.originalUrl=="/users/login"||req.originalUrl=="/users/logout"||req.path=="/api/goods"||req.originalUrl=="/checkLogin"){
 			next()
 		}else{

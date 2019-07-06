@@ -41,7 +41,7 @@
 import axios from 'axios'
 import NavHeader from '@/components/NavHeader.vue'
 import NavFooter from '@/components/NavFooter.vue'
-import NavBread from '@/components/NavBread.vue'
+
 
 export default {
   data(){
@@ -53,7 +53,7 @@ export default {
   components:{
           NavHeader,
           NavFooter,
-          NavBread
+  
   },
   created(){
     this.orderId=this.$route.query.orderId
